@@ -9,7 +9,7 @@ import lombok.Setter;
 @DiscriminatorValue("M")
 @Getter
 @Setter
-public class movie extends Item {
+public class Movie extends Item {
     private String director;
     private String actor;
 }
