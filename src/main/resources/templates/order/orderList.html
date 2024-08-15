@@ -1,0 +1,77 @@
+<!DOCTYPE HTML>
+<html xmlns:th="http://www.thymeleaf.org">
+<head th:replace="fragments/header :: header"/>
+<body>
+<div class="container">
+    <div th:replace="fragments/bodyHeader :: bodyHeader"/>
+    <div>
+        <div>
+            <form th:object="${orderSearch}" class="form-inline">
+                <div class="form-group mb-2">
+                    <input type="text" th:field="*{memberName}" class="formcontrol"
+                           placeholder="회원명"/>
+                </div>
+                <div class="form-group mx-sm-1 mb-2">
+                    <select th:field="*{orderStatus}" class="form-control">
+                        <option value="">주문상태</option>
+                        <option th:each=
+                                        "status : ${T(jpabook.jpashop.domain.OrderStatus).values()}"
+                                th:value="${status}"
+                                th:text="${status}">option
+                        </option>
+<!--                        위 옵션에서 status에 대해서 jpabook.jpashop.domain.OrderStatus의
+                            값을 전부 가져와서 그걸 each로 돌린 것-->
+                    </select>
+                </div>
+                <button type="submit" class="btn btn-primary mb-2">검색</button>
+            </form>
+<!--            여기서 중요한 것은 @ModelAttribute를 통해 담게 되면 굳이 모델
+                에드어트리뷰트를 하지 않아도 자동으로 담기게 된다.그리고 담겨서 넘어온 것이
+                오브젝트에 담긴 것 검색을 누르면 submit이 되면서 데이터가 넘어가고
+                그 데이터를 받아서 이름과 상태 값을 넘겨주면서 오더서치에 바인딩이 되어 컨트롤러에
+                넘어간다.-->
+        </div>
+        <table class="table table-striped">
+            <thead>
+            <tr>
+                <th>#</th>
+                <th>회원명</th>
+                <th>대표상품 이름</th>
+                <th>대표상품 주문가격</th>
+                <th>대표상품 주문수량</th>
+                <th>상태</th>
+                <th>일시</th>
+                <th></th>
+            </tr>
+            </thead>
+            <tbody>
+            <tr th:each="item : ${orders}">
+                <td th:text="${item.id}"></td>
+                <td th:text="${item.member.name}"></td>
+                <td th:text="${item.orderItems[0].item.name}"></td>
+                <td th:text="${item.orderItems[0].orderPrice}"></td>
+                <td th:text="${item.orderItems[0].count}"></td>
+                <td th:text="${item.status}"></td>
+                <td th:text="${item.orderDate}"></td>
+                <td>
+                    <a th:if="${item.status.name() == 'ORDER'}" href="#"
+                       th:href="'javascript:cancel('+${item.id}+')'"
+                       class="btn btn-danger">CANCEL</a>
+                </td>
+            </tr>
+            </tbody>
+        </table>
+    </div>
+    <div th:replace="fragments/footer :: footer"/>
+</div> <!-- /container -->
+</body>
+<script>
+    function cancel(id) {
+    var form = document.createElement("form");
+    form.setAttribute("method", "post");
+    form.setAttribute("action", "/orders/" + id + "/cancel");
+    document.body.appendChild(form);
+    form.submit();
+    }
+</script>
+</html>

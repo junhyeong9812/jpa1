@@ -8,6 +8,7 @@ import jpabook.jpashop.domain.item.Item;
 import jpabook.jpashop.repository.ItemRepository;
 import jpabook.jpashop.repository.MemberRepository;
 import jpabook.jpashop.repository.OrderRepository;
+import jpabook.jpashop.repository.OrderSearch;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -87,9 +88,11 @@ public class OrderService {
 
     }
 
-    //검색
-//    public List<Order> findOrder(OrderSearch orderSearch){
-//        return orderRepository.findAll(orderSearch);
-//    }
+//    검색
+    public List<Order> findOrder(OrderSearch orderSearch){
+        return orderRepository.findAll(orderSearch);
+        //단순 위임이니 컨트롤러에서 리포지토리를 바로 호출해도 된다.
+        //리포지토리에 접근하는 것은 단순한 조회같은 경우에는 그냥 호출하는 것도 좋다.
+    }
 
 }
